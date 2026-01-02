@@ -88,6 +88,12 @@ public class PresetsScreen extends OptionsSubScreen {
     }
 
     @Override
+    protected void repositionElements() {
+        this.rebuildWidgets();
+        this.init();
+    }
+
+    @Override
     protected void addOptions() {
 
     }

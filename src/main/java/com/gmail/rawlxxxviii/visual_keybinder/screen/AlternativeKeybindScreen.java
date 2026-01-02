@@ -95,8 +95,6 @@ public class AlternativeKeybindScreen extends OptionsSubScreen {
     @Override
     protected void init() {
 
-
-
         layoutHeight = (int)((height - PAGE_PADDING_TOP - PAGE_PADDING_BOTTOM - PAGE_MID_GAP_VERTICAL) * 0.45);
         detailsListHeight = (height - layoutHeight - PAGE_PADDING_TOP - PAGE_PADDING_BOTTOM - PAGE_MID_GAP_VERTICAL);
         defaultListHeight = detailsListHeight - FILTERS_HEIGHT;
@@ -192,6 +190,12 @@ public class AlternativeKeybindScreen extends OptionsSubScreen {
         keyMappingCategoryFilterEditBox.setResponder(defaultKeyBindsList::setCategoryFilter);
         keyMappingNameFilterEditBox.setResponder(defaultKeyBindsList::setKeyMappingFilter);
 
+    }
+
+    @Override
+    protected void repositionElements() {
+        this.rebuildWidgets();
+        this.init();
     }
 
     @Override
