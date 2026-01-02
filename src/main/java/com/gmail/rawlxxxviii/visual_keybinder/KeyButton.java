@@ -2,15 +2,25 @@ package com.gmail.rawlxxxviii.visual_keybinder;
 
 import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.util.KeyUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 
 public class KeyButton extends ImageButton {
+
+    private static final WidgetSprites KEY_BUTTON_WIDGET_SPRITES = new WidgetSprites(
+        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"key_button"),
+        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"key_button_highlighted")
+    );
+    private static final WidgetSprites KEY_BUTTON_WIDGET_SPRITES_WIDE = new WidgetSprites(
+        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"key_button_wide"),
+        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"key_button_wide_highlighted")
+    );
 
     private final KeyboardLayoutKey keyboardLayoutKey;
     private final AlternativeKeybindScreen parentScreen;
@@ -19,12 +29,11 @@ public class KeyButton extends ImageButton {
     public KeyButton(AlternativeKeybindScreen parentScreen, KeyBoardLayout keyBoardLayout , KeyboardLayoutKey keyboardLayoutKey, int x, int y, OnPress onPress) {
 
         super (
-            x, y,
-            keyboardLayoutKey.isWide() ? AlternativeKeybindScreen.WIDE_KEY_BUTTON_WIDTH : AlternativeKeybindScreen.KEY_BUTTON_WIDTH, AlternativeKeybindScreen.KEY_BUTTON_HEIGHT,
-            keyboardLayoutKey.isWide() ? 120 : 0, 0,
+            x,
+            y,
+            keyboardLayoutKey.isWide() ? AlternativeKeybindScreen.WIDE_KEY_BUTTON_WIDTH : AlternativeKeybindScreen.KEY_BUTTON_WIDTH,
             AlternativeKeybindScreen.KEY_BUTTON_HEIGHT,
-            new ResourceLocation(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
-            512, 512,
+            keyboardLayoutKey.isWide() ? KEY_BUTTON_WIDGET_SPRITES_WIDE : KEY_BUTTON_WIDGET_SPRITES,
             onPress,
             keyboardLayoutKey.getKey().getDisplayName()
         );
@@ -36,14 +45,15 @@ public class KeyButton extends ImageButton {
 
     }
 
+
+
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float p_93660_) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float p_93660_) {
         if (!this.visible) {return;}
 
-        float scale = getScale();
-
-
         this.isHovered = checkIsMouseOver(mouseX,mouseY);
+
+        float scale = getScale();
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(
@@ -52,12 +62,13 @@ public class KeyButton extends ImageButton {
                 1);
         guiGraphics.pose().scale(scale,scale,1);
 
-        renderWidget(guiGraphics,mouseX,mouseY,p_93660_);
+        super.renderWidget(guiGraphics, mouseX, mouseY, p_93660_);
+
         renderOverlay(guiGraphics,mouseX,mouseY,p_93660_);
 
         guiGraphics.pose().popPose();
-
     }
+
 
     private float getScale(){
 
@@ -95,7 +106,6 @@ public class KeyButton extends ImageButton {
     private float getDiffY(){
 
         float scale = getScale();
-
 
         var centerYOrigin = parentScreen.getLayoutTop() + parentScreen.getLayoutHeight() / 2;
         var centerYAfterScale = centerYOrigin * scale;
@@ -142,7 +152,7 @@ public class KeyButton extends ImageButton {
 
 //        //usage
         guiGraphics.blit(
-                new ResourceLocation(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
+                ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
                 getX(), getY(),
 
                 isEmpty ? canvasX + 3*width : hasConflict ? canvasX + width : canvasX + 2*width,
@@ -155,7 +165,7 @@ public class KeyButton extends ImageButton {
         // selected
         if(this.parentScreen.getDetailsList()!=null && this.parentScreen.getDetailsList().getSelectedKey().getKey().getValue() == keyboardLayoutKey.getKey().getValue()){
             guiGraphics.blit(
-                    new ResourceLocation(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
+                    ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
                     getX(), getY(),
                     canvasX + 4*width,0,
                     this.width, this.height,
@@ -165,7 +175,7 @@ public class KeyButton extends ImageButton {
 
         // key
         guiGraphics.drawCenteredString(
-                parentScreen.getMinecraft().font,
+                Minecraft.getInstance().font,
                 keyboardLayoutKey.getKey().getDisplayName(),
                 getX() + this.width / 2,
                 getY() + (this.height - 8) / 2,

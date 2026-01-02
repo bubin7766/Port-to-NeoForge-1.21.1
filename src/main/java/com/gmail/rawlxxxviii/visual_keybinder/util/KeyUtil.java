@@ -62,7 +62,7 @@ public class KeyUtil {
         }
 
         if (keyMappingA.getKeyConflictContext().conflicts(keyConflictContextB) || keyConflictContextB.conflicts(keyMappingA.getKeyConflictContext())) {
-            net.minecraftforge.client.settings.KeyModifier keyModifier = keyMappingA.getKeyModifier();
+            KeyModifier keyModifier = keyMappingA.getKeyModifier();
             if (keyModifier.matches(keyB) || keyModifierB.matches(keyMappingA.getKey())) {
                 return true;
             } else if (keyMappingA.getKey().equals(keyB)) {
@@ -71,7 +71,7 @@ public class KeyUtil {
                 // GUI and other key contexts do not have this limitation.
                 return keyModifier == keyModifierB ||
                         (keyMappingA.getKeyConflictContext().conflicts(net.minecraftforge.client.settings.KeyConflictContext.IN_GAME) &&
-                                (keyModifier == net.minecraftforge.client.settings.KeyModifier.NONE || keyModifierB == net.minecraftforge.client.settings.KeyModifier.NONE));
+                                (keyModifier == KeyModifier.NONE || keyModifierB == KeyModifier.NONE));
             }
         }
         return keyMappingA.getKey().equals(keyB);

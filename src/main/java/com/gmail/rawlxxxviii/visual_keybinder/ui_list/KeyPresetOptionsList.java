@@ -6,7 +6,6 @@ import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.screen.PresetsScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.util.FileUtil;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,16 +28,18 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
     private final PresetsScreen parentScreen;
     protected final Options options;
 
+    private final int left;
+
     public KeyPresetOptionsList(PresetsScreen parentScreen, Minecraft minecraft, Options options, int left, int top, int width, int height) {
 
-        super(minecraft, width, height, top, height + top, 26);
+        super(minecraft, width, height, top, 26);
         this.options = options;
 
-        this.setRenderTopAndBottom(false);
         this.height = height;
 
-        this.x0 = left;
-        this.x1 = width + this.x0;
+        this.left = left;
+//        this.x0 = left;
+//        this.x1 = width + this.x0;
 
         this.parentScreen = parentScreen;
 
@@ -46,6 +47,10 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
 
     }
 
+    @Override
+    public int getX() {
+        return left;
+    }
 
     private void buildEntries(){
         clearEntries();
@@ -76,7 +81,7 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
 
     @Override
     protected int getScrollbarPosition() {
-        return this.width + this.x0 - 6;
+        return this.width + this.getRowLeft() - 6;
     }
 
     @Override
@@ -105,8 +110,8 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
     }
 
     @Override
-    public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-        return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
+    public boolean mouseScrolled(double p_93416_, double p_93417_, double p_93418_, double p_298552_) {
+        return super.mouseScrolled(p_93416_, p_93417_, p_93418_, p_298552_);
     }
 
     @Override
@@ -124,17 +129,13 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         return super.charTyped(p_94683_, p_94684_);
     }
 
-    @Override
-    public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-        super.magicalSpecialHackyFocus(p_94726_);
+
+    @OnlyIn(Dist.CLIENT)
+    public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public abstract static class Entry extends ContainerObjectSelectionList.Entry<KeyPresetOptionsList.Entry> {
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public class PresetEntry extends KeyPresetOptionsList.Entry {
+    public class PresetEntry extends Entry {
         private final KeybindingPreset keybindingPreset;
         private final Button saveButton;
         private final Button loadButton;
@@ -186,24 +187,25 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         public void render(GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
 
-            guiGraphics.drawString(
-                    parentScreen.getMinecraft().font,
-                    Component.literal(this.keybindingPreset.getName()),
-                    getRowLeft() + 5,
-                    getRowTop(p_193924_) + 6,
-                    isPresetActive ? AlternativeKeybindScreen.ACTIVE_COLOR : Color.white.getRGB());
+            guiGraphics.enableScissor(getRowLeft(), getRowTop(0),getRight(), getBottom());
 
-            this.saveButton.setY(p_193925_);
-            this.saveButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
+                guiGraphics.drawString(
+                        Minecraft.getInstance().font,
+                        Component.literal(this.keybindingPreset.getName()),
+                        getRowLeft() + 5,
+                        getRowTop(p_193924_) + 6,
+                        isPresetActive ? AlternativeKeybindScreen.ACTIVE_COLOR : Color.white.getRGB());
 
-            this.loadButton.setY(p_193925_ );
-            this.loadButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
+                this.saveButton.setY(p_193925_);
+                this.saveButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
 
-            this.deleteButton.setY(p_193925_ );
-            this.deleteButton.setFGColor( this.deleteButton.active ? AlternativeKeybindScreen.DANGER_COLOR : Color.GRAY.getRGB());
-            this.deleteButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
+                this.loadButton.setY(p_193925_ );
+                this.loadButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
+
+                this.deleteButton.setY(p_193925_ );
+                this.deleteButton.setFGColor( this.deleteButton.active ? AlternativeKeybindScreen.DANGER_COLOR : Color.GRAY.getRGB());
+                this.deleteButton.render(guiGraphics, p_193929_, p_193930_, p_193932_);
 
             guiGraphics.disableScissor();
         }
@@ -241,11 +243,6 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -260,15 +257,11 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
             return super.charTyped(p_94683_, p_94684_);
         }
 
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public class UnbindAllEntry extends KeyPresetOptionsList.Entry {
+    public class UnbindAllEntry extends Entry {
         private final Button button;
 
         UnbindAllEntry() {
@@ -290,10 +283,10 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         public void render(GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(), getRowTop(0), getRight(), getBottom());
 
             guiGraphics.drawString(
-                    parentScreen.getMinecraft().font,
+                    Minecraft.getInstance().font,
                     Component.literal("Unbind all keybindings"),
                     getRowLeft() + 5,
                     getRowTop(p_193924_) + 6,
@@ -338,11 +331,6 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -357,14 +345,10 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
             return super.charTyped(p_94683_, p_94684_);
         }
 
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class EmptyEntry extends KeyPresetOptionsList.Entry {
+    public class EmptyEntry extends Entry {
 
         EmptyEntry() {
 
@@ -409,10 +393,6 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
             return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
         }
 
-        @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
 
         @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
@@ -429,15 +409,11 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
             return super.charTyped(p_94683_, p_94684_);
         }
 
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public class ResetAllEntry extends KeyPresetOptionsList.Entry {
+    public class ResetAllEntry extends Entry {
         private final Button button;
 
         ResetAllEntry() {
@@ -461,10 +437,10 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         public void render(GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(), getRowTop(0), getRight(), getBottom());
 
             guiGraphics.drawString(
-                    parentScreen.getMinecraft().font,
+                    Minecraft.getInstance().font,
                     Component.literal("Reset to defaults"),
                     getRowLeft() + 5,
                     getRowTop(p_193924_) + 6,
@@ -509,11 +485,6 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -528,10 +499,6 @@ public class KeyPresetOptionsList extends ContainerObjectSelectionList<KeyPreset
             return super.charTyped(p_94683_, p_94684_);
         }
 
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
     }
 
 

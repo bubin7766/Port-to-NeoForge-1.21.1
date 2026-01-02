@@ -1,18 +1,17 @@
 package com.gmail.rawlxxxviii.visual_keybinder.screen;
 
-import com.gmail.rawlxxxviii.visual_keybinder.ui_list.KeyPresetOptionsList;
 import com.gmail.rawlxxxviii.visual_keybinder.KeybindingPreset;
+import com.gmail.rawlxxxviii.visual_keybinder.ui_list.KeyPresetOptionsList;
 import com.gmail.rawlxxxviii.visual_keybinder.util.FileUtil;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -88,6 +87,11 @@ public class PresetsScreen extends OptionsSubScreen {
 
     }
 
+    @Override
+    protected void addOptions() {
+
+    }
+
     public void savePreset(String name){
 
         name = FileUtil.sanitizeString(name);
@@ -146,11 +150,11 @@ public class PresetsScreen extends OptionsSubScreen {
         KeyMapping.resetMapping();
         rebuildWidgets();
     }
-
-    @Override
-    public void tick(){
-        newPresetNameEditBox.tick();
-    }
+//
+//    @Override
+//    public void tick(){
+//        newPresetNameEditBox.tick();
+//    }
 
     @Override
     public void setFocused(@Nullable GuiEventListener p_94677_) {
@@ -163,7 +167,8 @@ public class PresetsScreen extends OptionsSubScreen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float p_193994_) {
-        this.renderDirtBackground(guiGraphics);
+
+        super.render(guiGraphics, mouseX, mouseY, p_193994_);
 
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
 
@@ -181,8 +186,6 @@ public class PresetsScreen extends OptionsSubScreen {
         }
 
         KeyPresetOptionsList.render(guiGraphics, mouseX, mouseY, p_193994_);
-
-        super.render(guiGraphics, mouseX, mouseY, p_193994_);
     }
 
     public boolean isPresetActive(KeybindingPreset keybindingPreset){

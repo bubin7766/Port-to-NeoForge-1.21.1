@@ -1,15 +1,19 @@
 package com.gmail.rawlxxxviii.visual_keybinder.mixin;
 
-import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.VisualKeybinderMod;
 import com.gmail.rawlxxxviii.visual_keybinder.config.ClientConfig;
+import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.OptionsSubScreen;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.controls.ControlsScreen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,25 +28,30 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
         super(p_96284_, p_96285_, p_96286_);
     }
 
-    @Inject(method = "init", at = @At("RETURN"))
+    @Inject(method = "addOptions", at = @At("RETURN"))
     protected void initInject(CallbackInfo ci){
-        var button = new ImageButton(
-                this.width / 2 + 150 + 10 + ClientConfig.menuButtonOffsetX.get(),
-                this.height / 6 - 12 + ClientConfig.menuButtonOffsetY.get(),
+//        var button = new ImageButton(
+//                this.width / 2 + 150 + 10 + ClientConfig.menuButtonOffsetX.get(),
+//                this.height / 6 - 12 + ClientConfig.menuButtonOffsetY.get(),
+//                27,
+//                20,
+//                new WidgetSprites(
+//                        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"menu_button_open_keybinding_screen"),
+//                        ResourceLocation.fromNamespaceAndPath(VisualKeybinderMod.MODID,"menu_button_open_keybinding_screen_hovered")
+//                ),
+//                (x) -> Minecraft.getInstance().setScreen(new AlternativeKeybindScreen(this, this.options)),
+//                Component.literal("Visual keybinder")
+//        );
+//        button.setTooltip(Tooltip.create(button.getMessage()));
+//
+//        this.addRenderableWidget(button);
 
-                27, 20,
-                0, 56,
-                20,
-                new ResourceLocation(VisualKeybinderMod.MODID,"textures/gui/gui.png"),
-                512,512,
-                (p_97538_) -> this.minecraft.setScreen(new AlternativeKeybindScreen(this, this.options)),
-
-                Component.literal("Visual keybinder")
-        );
-        button.setTooltip(Tooltip.create(button.getMessage()));
-
-        this.addRenderableWidget
-            (button);
+        var button2 = Button.builder(
+                Component.translatable("raws_visual_keybinder.screen.button.raws_visual_keybinder_button")
+                        .withStyle(ChatFormatting.YELLOW),
+                p_343299_ -> this.minecraft.setScreen(new AlternativeKeybindScreen(this, this.options)))
+                .build();
+        this.list.addSmall(button2,null);
 
     }
 

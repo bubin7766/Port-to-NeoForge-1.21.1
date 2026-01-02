@@ -3,7 +3,6 @@ package com.gmail.rawlxxxviii.visual_keybinder.ui_list;
 import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.util.KeyUtil;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -20,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKeyBindsList.Entry> {
     private final AlternativeKeybindScreen parentScreen;
@@ -30,20 +29,29 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
     private String categoryFilter = "";
     private String keyMappingFilter = "";
 
+    private final int left;
+
     public DefaultKeyBindsList(AlternativeKeybindScreen parentScreen, Minecraft minecraft, Options options, int left, int top, int width, int height) {
-        super(minecraft, width, height, top, height + top, 20);
+        super(minecraft,
+                width,
+                height,
+                top,
+                20 // itemHeight
+        );
 
         this.parentScreen = parentScreen;
         this.options = options;
 
-        this.setRenderTopAndBottom(false);
-        this.x0 = left;
-        this.x1 = width + this.x0;
+        this.left = left;
 
         buildEntries();
 
     }
 
+    @Override
+    public int getX() {
+        return left;
+    }
 
     public void setCategoryFilter(String value){
         categoryFilter = value;
@@ -132,7 +140,7 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
         });
 
         if(children().isEmpty()){
-            this.addEntry(new DefaultKeyBindsList.TitleEntry( Component.literal("No results"), Color.DARK_GRAY.getRGB()));
+            this.addEntry(new TitleEntry( Component.literal("No results"), Color.DARK_GRAY.getRGB()));
         }
 
         setScrollAmount(getScrollAmount());
@@ -149,16 +157,16 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
 
     @Override
     protected int getScrollbarPosition() {
-        return this.width + this.x0 - 6;
+        return this.width + getRowLeft() - 6;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public abstract static class Entry extends ContainerObjectSelectionList.Entry<DefaultKeyBindsList.Entry> {
+    public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public class TitleEntry extends DefaultKeyBindsList.Entry {
+    public class TitleEntry extends Entry {
         final Component name;
         private final int color;
 
@@ -169,8 +177,8 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
 
         @Override
         public void render(GuiGraphics guiGraphics, int p_193889_, int y, int p_193891_, int p_193892_, int height, int p_193894_, int p_193895_, boolean p_193896_, float p_193897_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
-            guiGraphics.drawString(minecraft.font, this.name, getLeft() + 5 , y + height - 4, color);
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
+            guiGraphics.drawString(minecraft.font, this.name, getRowLeft() + 5 , y + height - 4, color);
             guiGraphics.disableScissor();
         }
 
@@ -205,11 +213,6 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -225,18 +228,13 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
         }
 
         @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
-
-        @Override
         public List<? extends NarratableEntry> narratables() {
             return List.of();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class CategoryEntry extends DefaultKeyBindsList.Entry {
+    public class CategoryEntry extends Entry {
         final Component name;
 
         public CategoryEntry(Component p_193886_) {
@@ -245,8 +243,8 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
 
         @Override
         public void render(@NotNull GuiGraphics guiGraphics, int p_193889_, int p_193890_, int p_193891_, int p_193892_, int p_193893_, int p_193894_, int p_193895_, boolean p_193896_, float p_193897_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
-            guiGraphics.drawString(minecraft.font, this.name, getLeft() + 5 , p_193890_ + p_193893_ - 10, AlternativeKeybindScreen.CATEGORY_COLOR);
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
+            guiGraphics.drawString(minecraft.font, this.name, getRowLeft() + 5 , p_193890_ + p_193893_ - 10, AlternativeKeybindScreen.CATEGORY_COLOR);
             guiGraphics.disableScissor();
         }
 
@@ -281,11 +279,6 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -301,18 +294,13 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
         }
 
         @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
-
-        @Override
         public List<? extends NarratableEntry> narratables() {
             return List.of();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class EmptyEntry extends DefaultKeyBindsList.Entry {
+    public class EmptyEntry extends Entry {
 
         public EmptyEntry() {
         }
@@ -334,7 +322,7 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class KeyEntry extends DefaultKeyBindsList.Entry {
+    public class KeyEntry extends Entry {
         private final KeyMapping key;
         private final Component name;
         private final Button changeButton;
@@ -384,10 +372,10 @@ public class DefaultKeyBindsList extends ContainerObjectSelectionList<DefaultKey
 
         @Override
         public void render(@NotNull GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
 
 
-            guiGraphics.drawString(minecraft.font, this.name, getLeft() + 5, p_193925_ + p_193928_ - 10, 16777215);
+            guiGraphics.drawString(minecraft.font, this.name, getRowLeft() + 5, p_193925_ + p_193928_ - 10, 16777215);
 
             this.changeButton.setX( p_193926_ + (int)((float)getWidth() * .43F));
             this.changeButton.setY( p_193925_);

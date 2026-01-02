@@ -6,7 +6,6 @@ import com.gmail.rawlxxxviii.visual_keybinder.config.ClientConfig;
 import com.gmail.rawlxxxviii.visual_keybinder.screen.AlternativeKeybindScreen;
 import com.gmail.rawlxxxviii.visual_keybinder.util.KeyUtil;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -33,22 +32,27 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
     private final KeyboardLayoutKey selectedKey;
     protected final Options options;
 
+    private final int left;
+
     public KeyDetailsList(AlternativeKeybindScreen parentScreen, Minecraft minecraft, Options options, KeyboardLayoutKey selectedKey, int left, int top, int width, int height) {
 
-        super(minecraft, width, height, top, height + top, 20);
+        super(minecraft, width, height, top, 20);
         this.options = options;
 
-        this.setRenderTopAndBottom(false);
         this.height = height;
 
-        this.x0 = left;
-        this.x1 = width + this.x0;
+        this.left = left;
 
         this.parentScreen = parentScreen;
         this.selectedKey = selectedKey;
 
         buildEndtries();
 
+    }
+
+    @Override
+    public int getX() {
+        return left;
     }
 
 
@@ -99,7 +103,7 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
 
     @Override
     protected int getScrollbarPosition() {
-        return this.width + this.x0 - 6;
+        return this.width + getRowLeft() - 6;
     }
 
     @Override
@@ -128,11 +132,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
     }
 
     @Override
-    public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-        return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-    }
-
-    @Override
     public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
         return super.keyPressed(p_94710_, p_94711_, p_94712_);
     }
@@ -147,18 +146,12 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         return super.charTyped(p_94683_, p_94684_);
     }
 
-    @Override
-    public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-        super.magicalSpecialHackyFocus(p_94726_);
-    }
-
-
     @OnlyIn(Dist.CLIENT)
-    public abstract static class Entry extends ContainerObjectSelectionList.Entry<KeyDetailsList.Entry> {
+    public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class TitleEntry extends KeyDetailsList.Entry {
+    public class TitleEntry extends Entry {
         final Component name;
         private final int color;
 
@@ -169,8 +162,8 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
 
         @Override
         public void render(GuiGraphics guiGraphics, int p_193889_, int y, int p_193891_, int p_193892_, int height, int p_193894_, int p_193895_, boolean p_193896_, float p_193897_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
-            guiGraphics.drawString(minecraft.font, this.name, getLeft() + 5 , y + height - 4, color);
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
+            guiGraphics.drawString(minecraft.font, this.name, getRowLeft() + 5 , y + height - 4, color);
             guiGraphics.disableScissor();
         }
 
@@ -205,11 +198,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -225,18 +213,13 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
-
-        @Override
         public List<? extends NarratableEntry> narratables() {
             return List.of();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class DetailsListTitleEntry extends KeyDetailsList.Entry {
+    public class DetailsListTitleEntry extends Entry {
 
         private final boolean hasConflicts;
 
@@ -246,10 +229,10 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
 
         @Override
         public void render(GuiGraphics guiGraphics, int p_193889_, int p_193890_, int p_193891_, int p_193892_, int p_193893_, int p_193894_, int p_193895_, boolean p_193896_, float p_193897_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
 
             guiGraphics.fill(
-                    getLeft(),
+                    getRowLeft(),
                     getRowTop(0) - 4,
                     getRight(),
                     getRowTop(0) + itemHeight,
@@ -258,7 +241,7 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
 
             guiGraphics.drawString(minecraft.font,
                     KeyDetailsList.this.getSelectedKey().getKey().getDisplayName(),
-                    getLeft() + 5 , p_193890_ + 5,
+                    getRowLeft() + 5 , p_193890_ + 5,
                     hasConflicts ? AlternativeKeybindScreen.CONFLICT_COLOR :Color.white.getRGB()
             );
 
@@ -296,11 +279,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -316,18 +294,13 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
-
-        @Override
         public List<? extends NarratableEntry> narratables() {
             return List.of();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class EmptyEntry extends KeyDetailsList.Entry {
+    public class EmptyEntry extends Entry {
 
         public EmptyEntry() {
         }
@@ -349,7 +322,7 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class KeyEntry extends KeyDetailsList.Entry {
+    public class KeyEntry extends Entry {
         private final KeyMapping key;
         private final boolean isConflicting;
 
@@ -359,9 +332,9 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         public void render(GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
 
-            guiGraphics.drawString(minecraft.font, Component.translatable(key.getName()), getLeft() + 5, (p_193925_ + p_193928_ / 2), 16777215);
+            guiGraphics.drawString(minecraft.font, Component.translatable(key.getName()), getRowLeft() + 5, (p_193925_ + p_193928_ / 2), 16777215);
             if(ClientConfig.displayConflictContext.get() && getWidth() > 170 ){
                 if(key.getKeyConflictContext() == KeyConflictContext.GUI){
                     guiGraphics.drawString(minecraft.font, Component.literal("In GUI"), getRight()-75, p_193925_ + p_193928_ / 2 , Color.DARK_GRAY.getRGB());
@@ -413,11 +386,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -431,15 +399,10 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         public boolean charTyped(char p_94683_, int p_94684_) {
             return super.charTyped(p_94683_, p_94684_);
         }
-
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
-        }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public class KeyInfoEntry extends KeyDetailsList.Entry {
+    public class KeyInfoEntry extends Entry {
         private final KeyMapping key;
         private final Button changeButton;
         private final Button resetButton;
@@ -490,9 +453,9 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         public void render(GuiGraphics guiGraphics, int p_193924_, int p_193925_, int p_193926_, int p_193927_, int p_193928_, int p_193929_, int p_193930_, boolean p_193931_, float p_193932_) {
-            guiGraphics.enableScissor(getLeft(),getTop(),getRight(), getBottom());
+            guiGraphics.enableScissor(getRowLeft(),getRowTop(0),getRight(), getBottom());
 
-            this.changeButton.setX(getLeft() + 5);
+            this.changeButton.setX(getRowLeft() + 5);
             this.changeButton.setWidth( Math.max(40, Math.min(120, (int) ((float)getWidth() *.4F) )) );
             this.changeButton.setY(p_193925_);
             this.changeButton.setFGColor(isConflicting ? AlternativeKeybindScreen.CONFLICT_COLOR:Color.white.getRGB());
@@ -544,11 +507,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         }
 
         @Override
-        public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-            return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
-        }
-
-        @Override
         public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
             return super.keyPressed(p_94710_, p_94711_, p_94712_);
         }
@@ -561,11 +519,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         @Override
         public boolean charTyped(char p_94683_, int p_94684_) {
             return super.charTyped(p_94683_, p_94684_);
-        }
-
-        @Override
-        public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-            super.magicalSpecialHackyFocus(p_94726_);
         }
 
     }

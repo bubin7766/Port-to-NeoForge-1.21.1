@@ -127,7 +127,7 @@ public class FileUtil {
         FileWriter writer = new FileWriter(FMLPaths.GAMEDIR.get().resolve(FOLDER_LOCATION + File.separator + name + PRESET_EXTENSION).toString());
         for (var keymapping : options.keyMappings){
             String mappingName = keymapping.getName();
-            String key = keymapping.saveString() + (keymapping.getKeyModifier() != net.minecraftforge.client.settings.KeyModifier.NONE ? ":" + keymapping.getKeyModifier() : "");
+            String key = keymapping.saveString() + (keymapping.getKeyModifier() != KeyModifier.NONE ? ":" + keymapping.getKeyModifier() : "");
             writer.append(mappingName).append(":").append(key);
             writer.append("\n");
         }
@@ -160,9 +160,9 @@ public class FileUtil {
 
                         if (value.indexOf(':') != -1) {
                             String[] pts = value.split(":");
-                            keymapping.setKeyModifierAndCode(net.minecraftforge.client.settings.KeyModifier.valueFromString(pts[1]), InputConstants.getKey(pts[0]));
+                            keymapping.setKeyModifierAndCode(KeyModifier.valueFromString(pts[1]), InputConstants.getKey(pts[0]));
                         } else {
-                            keymapping.setKeyModifierAndCode(net.minecraftforge.client.settings.KeyModifier.NONE, InputConstants.getKey(value));
+                            keymapping.setKeyModifierAndCode(KeyModifier.NONE, InputConstants.getKey(value));
                         }
                     },
                     () -> {

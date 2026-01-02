@@ -1,4 +1,5 @@
 {
     "key.raws_visual_keybinder.category": "Visual Keybinder",
-    "key.raws_visual_keybinder.open_screen": "Open visual keybinder screen"
+    "key.raws_visual_keybinder.open_screen": "Open visual keybinder screen",
+    "raws_visual_keybinder.screen.button.raws_visual_keybinder_button": "Visual Keybinder"
 }
