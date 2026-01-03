@@ -195,7 +195,14 @@ public class AlternativeKeybindScreen extends OptionsSubScreen {
     @Override
     protected void repositionElements() {
         this.rebuildWidgets();
+    }
+
+    @Override
+    protected void rebuildWidgets() {
+        this.clearWidgets();
+        this.clearFocus();
         this.init();
+        this.setInitialFocus();
     }
 
     @Override

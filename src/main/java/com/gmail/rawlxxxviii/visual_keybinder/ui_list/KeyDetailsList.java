@@ -103,47 +103,7 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
 
     @Override
     protected int getScrollbarPosition() {
-        return this.width + getRowLeft() - 6;
-    }
-
-    @Override
-    public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-        return super.getChildAt(p_94730_, p_94731_);
-    }
-
-    @Override
-    public void mouseMoved(double p_94758_, double p_94759_) {
-        super.mouseMoved(p_94758_, p_94759_);
-    }
-
-    @Override
-    public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-        return super.mouseClicked(p_94695_, p_94696_, p_94697_);
-    }
-
-    @Override
-    public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-        return super.mouseReleased(p_94722_, p_94723_, p_94724_);
-    }
-
-    @Override
-    public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_) {
-        return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
-    }
-
-    @Override
-    public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
-        return super.keyPressed(p_94710_, p_94711_, p_94712_);
-    }
-
-    @Override
-    public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-        return super.keyReleased(p_94715_, p_94716_, p_94717_);
-    }
-
-    @Override
-    public boolean charTyped(char p_94683_, int p_94684_) {
-        return super.charTyped(p_94683_, p_94684_);
+        return this.width + getRowLeft() - 8;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -170,46 +130,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         @Override
         public List<? extends GuiEventListener> children() {
             return List.of();
-        }
-
-        @Override
-        public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-            return super.getChildAt(p_94730_, p_94731_);
-        }
-
-        @Override
-        public void mouseMoved(double p_94758_, double p_94759_) {
-            super.mouseMoved(p_94758_, p_94759_);
-        }
-
-        @Override
-        public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-            return super.mouseClicked(p_94695_, p_94696_, p_94697_);
-        }
-
-        @Override
-        public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-            return super.mouseReleased(p_94722_, p_94723_, p_94724_);
-        }
-
-        @Override
-        public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_) {
-            return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
-        }
-
-        @Override
-        public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
-            return super.keyPressed(p_94710_, p_94711_, p_94712_);
-        }
-
-        @Override
-        public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-            return super.keyReleased(p_94715_, p_94716_, p_94717_);
-        }
-
-        @Override
-        public boolean charTyped(char p_94683_, int p_94684_) {
-            return super.charTyped(p_94683_, p_94684_);
         }
 
         @Override
@@ -251,46 +171,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         @Override
         public List<? extends GuiEventListener> children() {
             return List.of();
-        }
-
-        @Override
-        public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-            return super.getChildAt(p_94730_, p_94731_);
-        }
-
-        @Override
-        public void mouseMoved(double p_94758_, double p_94759_) {
-            super.mouseMoved(p_94758_, p_94759_);
-        }
-
-        @Override
-        public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-            return super.mouseClicked(p_94695_, p_94696_, p_94697_);
-        }
-
-        @Override
-        public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-            return super.mouseReleased(p_94722_, p_94723_, p_94724_);
-        }
-
-        @Override
-        public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_) {
-            return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
-        }
-
-        @Override
-        public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
-            return super.keyPressed(p_94710_, p_94711_, p_94712_);
-        }
-
-        @Override
-        public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-            return super.keyReleased(p_94715_, p_94716_, p_94717_);
-        }
-
-        @Override
-        public boolean charTyped(char p_94683_, int p_94684_) {
-            return super.charTyped(p_94683_, p_94684_);
         }
 
         @Override
@@ -358,46 +238,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         @Override
         public List<? extends GuiEventListener> children() {
             return List.of();
-        }
-
-        @Override
-        public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-            return super.getChildAt(p_94730_, p_94731_);
-        }
-
-        @Override
-        public void mouseMoved(double p_94758_, double p_94759_) {
-            super.mouseMoved(p_94758_, p_94759_);
-        }
-
-        @Override
-        public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-            return super.mouseClicked(p_94695_, p_94696_, p_94697_);
-        }
-
-        @Override
-        public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-            return super.mouseReleased(p_94722_, p_94723_, p_94724_);
-        }
-
-        @Override
-        public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_) {
-            return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
-        }
-
-        @Override
-        public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
-            return super.keyPressed(p_94710_, p_94711_, p_94712_);
-        }
-
-        @Override
-        public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-            return super.keyReleased(p_94715_, p_94716_, p_94717_);
-        }
-
-        @Override
-        public boolean charTyped(char p_94683_, int p_94684_) {
-            return super.charTyped(p_94683_, p_94684_);
         }
     }
 
@@ -478,47 +318,6 @@ public class KeyDetailsList extends ContainerObjectSelectionList<KeyDetailsList.
         @Override
         public List<? extends NarratableEntry> narratables() {
             return List.of();
-        }
-
-
-        @Override
-        public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-            return super.getChildAt(p_94730_, p_94731_);
-        }
-
-        @Override
-        public void mouseMoved(double p_94758_, double p_94759_) {
-            super.mouseMoved(p_94758_, p_94759_);
-        }
-
-        @Override
-        public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-            return super.mouseClicked(p_94695_, p_94696_, p_94697_);
-        }
-
-        @Override
-        public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-            return super.mouseReleased(p_94722_, p_94723_, p_94724_);
-        }
-
-        @Override
-        public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_) {
-            return super.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
-        }
-
-        @Override
-        public boolean keyPressed(int p_94710_, int p_94711_, int p_94712_) {
-            return super.keyPressed(p_94710_, p_94711_, p_94712_);
-        }
-
-        @Override
-        public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-            return super.keyReleased(p_94715_, p_94716_, p_94717_);
-        }
-
-        @Override
-        public boolean charTyped(char p_94683_, int p_94684_) {
-            return super.charTyped(p_94683_, p_94684_);
         }
 
     }
