@@ -7,6 +7,7 @@ import com.gmail.rawlxxxviii.visual_keybinder.KeyboardLayoutKey;
 import com.gmail.rawlxxxviii.visual_keybinder.config.ClientConfig;
 import com.gmail.rawlxxxviii.visual_keybinder.ui_list.DefaultKeyBindsList;
 import com.gmail.rawlxxxviii.visual_keybinder.ui_list.KeyDetailsList;
+import com.gmail.rawlxxxviii.visual_keybinder.util.FileUtil;
 import com.gmail.rawlxxxviii.visual_keybinder.util.KeyUtil;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
@@ -241,7 +242,7 @@ public class AlternativeKeybindScreen extends OptionsSubScreen {
 
         this.keyboardLayouts.clear();
         this.keyboardLayouts.addAll(
-            ClientConfig.getKeyboardLayoutsFromConfig()
+                FileUtil.getKeyboardLayoutsFromFile()
         );
     }
 

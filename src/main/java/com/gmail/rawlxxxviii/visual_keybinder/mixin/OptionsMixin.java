@@ -16,7 +16,15 @@ public abstract class OptionsMixin {
     protected void initInject(CallbackInfo ci){
 
 
+        if(FileUtil.getLayoutFileList().isEmpty()){
+            FileUtil.createDefaultLayouts();
+        }
         FileUtil.loadInitialPreset( (Options) (Object) this );
+
+        if(!FileUtil.isInitializedFileCreated()){
+            FileUtil.createInitializedFile();
+
+        }
     }
 
     
