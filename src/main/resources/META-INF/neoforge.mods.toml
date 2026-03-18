@@ -23,6 +23,9 @@ version="1.21.1-0.1.12-neoforge" #mandatory
 # A display name for the mod
 displayName="Raw's Visual Keybinder" #mandatory
 
+# The logo file for the mod UI
+logoFile="logo.png"
+
 # The authors of the mod, displayed in the mod UI (optional)
 authors="rawlxxxviii, (Ported by bubin7766)"
 
