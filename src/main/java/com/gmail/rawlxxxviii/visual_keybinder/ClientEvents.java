@@ -39,50 +39,48 @@ public class ClientEvents {
 
             ImageButton visualKeybinderButton = new ImageButton(
                     0, 0,
-                    20, 20,
+                    27, 20,
                     buttonSprites,
                     btn -> {
                         Minecraft.getInstance().setScreen(new AlternativeKeybindScreen(controlsScreen, Minecraft.getInstance().options));
                     }
             ) {
-                // THE MAGIC OVERRIDE: Runs every frame, AFTER the layout engine does its math!
+                // THE CACHE: Stores the target so we don't have to search for it every frame!
+                private AbstractWidget cachedTarget = null;
+                private boolean hasSearched = false;
+
                 @Override
                 public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 
-                    // 1. Harvest all widgets in real-time
-                    List<AbstractWidget> allWidgets = new ArrayList<>();
-                    harvestAllWidgets(controlsScreen.children(), allWidgets);
+                    // 1. Only run the heavy folder-digging search ONCE.
+                    if (!hasSearched) {
+                        List<AbstractWidget> allWidgets = new ArrayList<>();
+                        harvestAllWidgets(controlsScreen.children(), allWidgets);
 
-                    AbstractWidget targetWidget = null;
-
-                    // 2. Find the top-right button
-                    for (AbstractWidget widget : allWidgets) {
-
-                        // We use >= just in case the button starts exactly on the center pixel!
-                        // We also check width >= 100 to ensure we don't accidentally grab our own tiny 20px button!
-                        if (widget.getX() >= controlsScreen.width / 2 && widget.getWidth() >= 100) {
-                            if (targetWidget == null || widget.getY() < targetWidget.getY()) {
-                                targetWidget = widget;
+                        for (AbstractWidget widget : allWidgets) {
+                            if (widget.getX() >= controlsScreen.width / 2 && widget.getWidth() >= 100) {
+                                if (cachedTarget == null || widget.getY() < cachedTarget.getY()) {
+                                    cachedTarget = widget;
+                                }
                             }
                         }
+                        hasSearched = true; // Lock the door!
                     }
 
-                    // 3. Stalker mode: Teleport to the vanilla button's right edge
-                    if (targetWidget != null) {
-                        this.setX(targetWidget.getX() + targetWidget.getWidth() + 4);
-                        this.setY(targetWidget.getY());
+                    // 2. Read the coordinates directly from our saved cache memory
+                    if (cachedTarget != null) {
+                        this.setX(cachedTarget.getX() + cachedTarget.getWidth() + 16);
+                        this.setY(cachedTarget.getY());
                     } else {
-                        // Fallback (just in case)
+                        // Fallback corner
                         this.setX(10);
                         this.setY(10);
                     }
 
-                    // Draw the button!
                     super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
                 }
             };
 
-            // Inject into the screen
             event.addListener(visualKeybinderButton);
         }
     }
